@@ -1,0 +1,23 @@
+{
+	"compilerOptions": {
+		"strict": true,
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"isolatedModules": false,
+		"strictNullChecks": false,
+		"removeComments": true,
+		"noUnusedParameters": false,
+		"noUnusedLocals": false,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"noImplicitAny": false,
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"lib": ["esnext"],
+		"target": "es6",
+		"baseUrl": ".",
+		"paths": {
+			"~/*": ["./*"]
+		}
+	}
+}

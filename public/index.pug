@@ -1,0 +1,26 @@
+doctype html
+html(lang="zh-tw")
+	head
+		title Draft
+		meta(name="charset",content="utf-8")
+		meta(name="viewport",content="width=device-width,initial-scale=1,shrink-to-fit=no")
+		meta(http-equiv="X-UA-Compatible",content="IE=edge")
+		link(rel="shortcut icon", href=htmlWebpackPlugin.files.favicon)
+		style(type="text/css").
+			body {
+				background: #f7fafc;
+			}
+
+		if htmlWebpackPlugin.manifest
+			link(rel="manifest", href=htmlWebpackPlugin.manifest)
+		each css in htmlWebpackPlugin.files.css
+			link(as="style", href=css, rel="preload")
+		each js in htmlWebpackPlugin.files.js
+			link(as="script", href=js, rel="preload")
+		each css in htmlWebpackPlugin.files.css
+			link(href=css, rel="stylesheet")
+	body
+		noscript You need to enable JavaScript to run this app.
+		#root
+		each js in htmlWebpackPlugin.files.js
+			script(type="text/javascript", src=js, defer)

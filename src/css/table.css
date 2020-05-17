@@ -1,0 +1,29 @@
+table {
+	width: calc(100% - 1px);
+	@apply mb-2 border-collapse table-auto leading-normal;
+}
+
+thead {
+	@apply font-bold text-left text-gray-800;
+}
+
+tr > td,
+tr > th {
+	@apply trans text-gray-900 bg-white whitespace-no-wrap box-border;
+}
+
+td {
+	@apply px-3 py-2 border border-gray-300;
+}
+
+th {
+	@apply px-3 py-3;
+}
+
+tbody tr:nth-child(odd) > td {
+	@apply bg-gray-300;
+}
+
+tbody tr:hover > td {
+	@apply bg-blue-300;
+}
