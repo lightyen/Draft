@@ -6,15 +6,11 @@ code[class*="language-"] {
 	/* max-width: 100%; */
 	/* width: 100%; */
 	color: var(--primary-text-color);
-	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
-	font-size: 1em;
 	text-align: left;
 	white-space: pre-wrap;
 	word-spacing: normal;
 	word-break: normal;
 	word-wrap: break-word;
-	line-height: 1.5rem;
-
 	tab-size: 4;
 	hyphens: none;
 }
@@ -95,9 +91,10 @@ code[class*="language-"] {
 .token.important,
 .token.bold {
 	font-weight: bold;
+	@apply font-bold;
 }
 .token.italic {
-	font-style: italic;
+	@apply italic;
 }
 
 .token.entity {

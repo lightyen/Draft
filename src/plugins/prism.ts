@@ -43,7 +43,6 @@ export const prism: PluginWithOptions<Partial<PrismjsConfiguration>> = (md, cfg 
 		const code = document.createElement("code")
 		div.appendChild(pre)
 		pre.appendChild(code)
-		pre.style.lineHeight = "1.5rem"
 		pre.className = classnames(langClass, preClassName)
 		code.className = langClass
 		code.textContent = token.content
