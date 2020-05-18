@@ -20,7 +20,6 @@ pre[class*="language-"].line-numbers > code {
 
 .line-numbers-rows > span {
 	counter-increment: linenumber;
-	margin-bottom: 0.049rem;
 	@apply block pointer-events-none;
 }
 

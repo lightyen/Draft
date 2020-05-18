@@ -9,8 +9,13 @@
 	color: inherit;
 }
 
+.line-numbers-rows {
+	line-height: 1.545;
+}
+
 pre:not([class*="CodeMirror"]) {
-	@apply mb-3 py-3 px-3 rounded shadow bg-gray-900;
+	padding: 15px;
+	@apply mb-3 rounded shadow bg-gray-900;
 }
 
 code {
