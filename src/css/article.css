@@ -1,21 +1,21 @@
 .post h1 {
-	@apply leading-normal font-black mt-5 mb-3 text-5xl;
+	@apply leading-normal font-black mt-8 mb-5 text-5xl;
 }
 
 .post h2 {
-	@apply leading-normal font-bold mt-5 mb-3 text-4xl;
+	@apply leading-normal font-bold mt-6 mb-4 text-4xl;
 }
 
 .post h3 {
-	@apply leading-normal font-bold mt-5 mb-3 text-3xl;
+	@apply leading-normal font-bold mt-6 mb-3 text-3xl;
 }
 
 .post h4 {
-	@apply leading-normal font-bold my-3 text-2xl;
+	@apply leading-normal font-bold my-4 text-2xl;
 }
 
 .post h5 {
-	@apply leading-normal font-bold my-2 text-xl;
+	@apply leading-normal font-bold my-3 text-xl;
 }
 
 .post h6 {

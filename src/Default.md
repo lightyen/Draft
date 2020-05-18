@@ -46,7 +46,7 @@
 
 ## 程式碼範例
 
-支援類型︰json, js, ts, jsx, tsx, go, css, scss
+支援類型︰`json`, `js`, `ts`, `jsx`, `tsx`, `go`, `css`, `scss`
 
 ```tsx
 import React from "react"
