@@ -1,7 +1,7 @@
 @import "./prismjs/style.css";
 
 body {
-	@apply leading-normal bg-gray-100 text-gray-800;
+	@apply leading-normal bg-gray-100 text-gray-800 overflow-hidden;
 	font-family: Roboto, Helvetica Neue, Helvetica, Arial, PingFang TC,
 		微軟正黑體, Microsoft JhengHei, 蘋果儷中黑, Apple LiGothic Medium,
 		sans-serif;

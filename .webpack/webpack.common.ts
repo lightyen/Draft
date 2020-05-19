@@ -8,7 +8,7 @@ import WebpackBarPlugin from "webpackbar"
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin"
 import TsPathsResolvePlugin from "./plugins/TsPathsResolvePlugin"
 import MonacoWebpackPlugin from "monaco-editor-webpack-plugin"
-
+import MonacoLocalesPlugin from "monaco-editor-locales-plugin"
 import type { Configuration, Plugin, Loader } from "webpack"
 
 // NOTE: 關閉 webpack 要求 donate 訊息
@@ -46,6 +46,11 @@ export default function (options?: { src?: string; dist?: string }): Configurati
 		new MonacoWebpackPlugin({
 			languages: ["typescript", "javascript", "css", "html", "json", "scss", "go", "markdown"],
 			features: ["coreCommands", "find"],
+		}),
+		new MonacoLocalesPlugin({
+			languages: ["zh-tw"],
+			defaultLanguage: "zh-tw",
+			logUnmatched: true,
 		}),
 	]
 

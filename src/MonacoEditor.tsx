@@ -58,6 +58,11 @@ const MonacoEditor: React.FC<Props> = ({ defaultValue, onChange }) => {
 			},
 			theme: "vs-dark",
 			scrollBeyondLastLine: false,
+			fontLigatures: true,
+			fontFamily: "Fira Code",
+			find: {
+				addExtraSpaceOnTop: false,
+			},
 			model,
 		})
 
