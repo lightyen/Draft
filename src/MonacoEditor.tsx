@@ -75,7 +75,6 @@ const MonacoEditor: React.FC<Props> = ({ defaultValue, onChange }) => {
 			const percentage = instance.getScrollTop() / (instance.getScrollHeight() - instance.getLayoutInfo().height)
 			const cTop = percentage * (scrollbar.scrollHeight - scrollbar.clientHeight)
 			scrollbar.scrollTop = cTop
-			console.log(instance.getLayoutInfo())
 		})
 		return () => {
 			model.dispose()
