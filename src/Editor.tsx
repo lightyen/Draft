@@ -1,7 +1,7 @@
 import React from "react"
-import { useSelector, useDispatch } from "react-redux"
+import { useDispatch } from "react-redux"
 
-import { setDraft } from "~/store"
+import { setDraft, useSelector } from "~/store"
 import { useScrollBarSource } from "./components/ScrollBar"
 
 import { fromTextArea, on, off } from "codemirror"
@@ -32,7 +32,7 @@ function useDebounce<T extends (...args: any[]) => void>(callback: T, delay: num
 }
 
 export default () => {
-	const draft = useSelector((state: string) => state)
+	const draft = useSelector(state => state.draft)
 	const dispatch = useDispatch()
 	const cb = React.useCallback(
 		(value: string) => {

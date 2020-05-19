@@ -45,12 +45,12 @@ export default function (options?: { src?: string; dist?: string }): Configurati
 		}),
 		new MonacoWebpackPlugin({
 			languages: ["typescript", "javascript", "css", "html", "json", "scss", "go", "markdown"],
-			features: ["coreCommands", "find"],
+			features: ["quickCommand", "find", "clipboard", "format"],
 		}),
 		new MonacoLocalesPlugin({
 			languages: ["zh-tw"],
 			defaultLanguage: "zh-tw",
-			logUnmatched: true,
+			logUnmatched: false,
 		}),
 	]
 

@@ -5,7 +5,7 @@
 
 ## 使用到的工具
 
-- [codemirror](https://codemirror.net/)
+- [monaco](https://github.com/Microsoft/monaco-editor)
 - [markdown-it](https://github.com/markdown-it/markdown-it)
 - [prismjs](https://prismjs.com/)
 - [tailwindcss](https://tailwindcss.com/)
@@ -20,7 +20,7 @@
 - 項目
 - 項目
 - 項目
-  - 小項目
+  - 項目
 - 項目
 
 1. 項目
@@ -51,22 +51,22 @@
 ```tsx
 import React from "react"
 const Demo: React.FC = () => {
-    return (
-        <div>Demo</div>
-    )
+	return (
+		<div>Demo</div>
+	)
 }
 ```
 
 ```js
 const md = new MarkdownIt({
-  html: true,
-  xhtmlOut: true,
-  typographer: true,
-  linkify: true,
+	html: true,
+	xhtmlOut: true,
+	typographer: true,
+	linkify: true,
 })
-  .use(youtube)
-  .use(prism)
-  .use(emoji)
+	.use(youtube)
+	.use(prism)
+	.use(emoji)
 ```
 
 ```go
