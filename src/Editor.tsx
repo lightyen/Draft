@@ -82,7 +82,7 @@ interface MyProps {
 type Textarea = Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "onChange">
 type Props = Textarea & MyProps
 
-export const CodeMirror = React.forwardRef<Editor, Props>(
+const CodeMirror = React.forwardRef<Editor, Props>(
 	({ options, className, style, onChange, defaultValue, ...props }, ref) => {
 		const textareaRef = React.useRef<HTMLTextAreaElement>()
 		const editorRef = React.useRef<EditorFromTextArea>()

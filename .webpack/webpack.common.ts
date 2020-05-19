@@ -1,5 +1,5 @@
 import path from "path"
-import { EnvironmentPlugin, ExtendedAPIPlugin } from "webpack"
+import { EnvironmentPlugin, ExtendedAPIPlugin, NormalModuleReplacementPlugin } from "webpack"
 
 // Plugins
 import HtmlWebpackPlugin from "html-webpack-plugin"
@@ -7,6 +7,7 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin"
 import WebpackBarPlugin from "webpackbar"
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin"
 import TsPathsResolvePlugin from "./plugins/TsPathsResolvePlugin"
+import MonacoWebpackPlugin from "monaco-editor-webpack-plugin"
 
 import type { Configuration, Plugin, Loader } from "webpack"
 
@@ -41,6 +42,10 @@ export default function (options?: { src?: string; dist?: string }): Configurati
 		new ForkTsCheckerWebpackPlugin({
 			checkSyntacticErrors: true,
 			tsconfig: path.resolve(src, "tsconfig.json"),
+		}),
+		new MonacoWebpackPlugin({
+			languages: ["typescript", "javascript", "css", "html", "json", "scss", "go", "markdown"],
+			features: ["coreCommands", "find"],
 		}),
 	]
 
@@ -203,6 +208,11 @@ export default function (options?: { src?: string; dist?: string }): Configurati
 		// NOTE: https://webpack.js.org/configuration/resolve/
 		resolve: {
 			extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
+			modules: [
+				path.resolve(workingDirectory, "node_modules"),
+				path.resolve(workingDirectory, "node_modules/monaco-markdown/node_modules"),
+				path.resolve(workingDirectory, "node_modules/markdown-it/node_modules"),
+			],
 			alias: {
 				assets: path.join(assets),
 			},
