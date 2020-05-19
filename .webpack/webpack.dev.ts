@@ -32,7 +32,7 @@ const config: Configuration = {
 		open: true,
 		host: "localhost",
 		clientLogLevel: "none",
-		publicPath: "/draft",
+		openPage: "draft",
 		contentBase: false,
 		quiet: true,
 		noInfo: true,

@@ -22,6 +22,7 @@ function useDebounce<T extends (...args: any[]) => void>(callback: T, delay: num
 
 export default () => {
 	const draft = useSelector((state: string) => state)
+	const defaultDraft = React.useRef(draft)
 	const dispatch = useDispatch()
 	const cb = React.useCallback(
 		(value: string) => {
@@ -32,8 +33,7 @@ export default () => {
 	const debounceSetDraft = useDebounce(cb, 100)
 
 	return React.useMemo(
-		() => <MonacoEditor defaultValue={draft} onChange={e => debounceSetDraft(e)} />,
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+		() => <MonacoEditor defaultValue={defaultDraft.current} onChange={e => debounceSetDraft(e)} />,
 		[debounceSetDraft],
 	)
 }
