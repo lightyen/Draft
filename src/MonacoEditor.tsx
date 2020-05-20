@@ -78,7 +78,6 @@ const MonacoEditor: React.FC<Props> = ({ defaultValue, onChange }) => {
 		editor.onDidChangeModelContent(event => {
 			onChange(editor.getValue())
 		})
-		window.setTimeout(() => editor.setScrollTop(300), 3000)
 		editor.onDidScrollChange(e => {
 			const percentage = editor.getScrollTop() / (editor.getScrollHeight() - editor.getLayoutInfo().height)
 			const cTop = percentage * (scrollbar.scrollHeight - scrollbar.clientHeight)

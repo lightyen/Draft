@@ -26,7 +26,6 @@ const Resizer: React.FC = () => {
 			active.current = false
 		}
 		const onmove = (e: MouseEvent) => {
-			e.preventDefault()
 			if (!active.current) {
 				return
 			}
@@ -78,8 +77,8 @@ export default () => {
 	const vw = useSelector(state => 100 - state.vw)
 	return (
 		<div className="flex-grow flex relative" style={{ width: `${vw}vw` }}>
-			<Resizer />
 			<Content />
+			<Resizer />
 		</div>
 	)
 }

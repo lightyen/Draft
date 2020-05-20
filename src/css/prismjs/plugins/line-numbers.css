@@ -15,7 +15,7 @@ pre[class*="language-"].line-numbers > code {
 	width: 3rem; /* works for line-numbers below 1000 lines */
 	letter-spacing: -1px;
 	@apply absolute top-0;
-	@apply border-r border-gray-600 select-none;
+	@apply border-r border-gray-600;
 }
 
 .line-numbers-rows > span {
