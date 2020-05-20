@@ -9,7 +9,7 @@
 	"scripts": {
 		"analyzer": "cross-env TS_NODE_PROJECT=\".webpack/tsconfig.json\" TS_NODE_FILES=true webpack --config .webpack/webpack.analyzer.ts",
 		"start": "cross-env TS_NODE_PROJECT=\".webpack/tsconfig.json\" TS_NODE_FILES=true webpack-dev-server --config .webpack/webpack.dev.ts",
-		"build": "cross-env TS_NODE_PROJECT=\".webpack/tsconfig.json\" TS_NODE_FILES=true webpack --config .webpack/webpack.prod.ts",
+		"build": "cross-env TS_NODE_PROJECT=\".webpack/tsconfig.json\" TS_NODE_FILES=true webpack --config .webpack/webpack.prod.ts --output-public-path /draft/",
 		"doit": "yarn upgrade-interactive --latest",
 		"test": "jest"
 	},
