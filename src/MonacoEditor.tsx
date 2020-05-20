@@ -5,18 +5,7 @@ import { useScrollBarSource } from "./components/ScrollBar"
 
 import { MonacoMarkdownExtension } from "monaco-markdown"
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api"
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function useDebounce<T extends (...args: any[]) => void>(callback: T, delay: number) {
-	const handle = React.useRef<number>()
-	return React.useCallback(
-		(...args: Parameters<T>) => {
-			window.clearTimeout(handle.current)
-			handle.current = window.setTimeout(() => callback(...args), delay)
-		},
-		[callback, delay],
-	)
-}
+import { useDebounce } from "~/hooks"
 
 export default () => {
 	const draft = useSelector(state => state.draft)
@@ -28,7 +17,7 @@ export default () => {
 		},
 		[dispatch],
 	)
-	const debounceSetDraft = useDebounce(cb, 100)
+	const debounceSetDraft = useDebounce(cb)
 
 	return React.useMemo(() => <Wrapper defaultValue={defaultDraft.current} onChange={e => debounceSetDraft(e)} />, [
 		debounceSetDraft,
@@ -89,6 +78,7 @@ const MonacoEditor: React.FC<Props> = ({ defaultValue, onChange }) => {
 		editor.onDidChangeModelContent(event => {
 			onChange(editor.getValue())
 		})
+		window.setTimeout(() => editor.setScrollTop(300), 3000)
 		editor.onDidScrollChange(e => {
 			const percentage = editor.getScrollTop() / (editor.getScrollHeight() - editor.getLayoutInfo().height)
 			const cTop = percentage * (scrollbar.scrollHeight - scrollbar.clientHeight)

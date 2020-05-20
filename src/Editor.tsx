@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux"
 
 import { setDraft, useSelector } from "~/store"
 import { useScrollBarSource } from "./components/ScrollBar"
+import { useDebounce } from "~/hooks"
 
 import { fromTextArea, on, off } from "codemirror"
 import type { Editor, EditorConfiguration, EditorFromTextArea, Doc, EditorChange } from "codemirror"
@@ -19,18 +20,6 @@ import "codemirror/mode/go/go"
 import "codemirror/mode/sass/sass"
 import "codemirror/mode/css/css"
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function useDebounce<T extends (...args: any[]) => void>(callback: T, delay: number) {
-	const handle = React.useRef<number>()
-	return React.useCallback(
-		(...args: Parameters<T>) => {
-			window.clearTimeout(handle.current)
-			handle.current = window.setTimeout(() => callback(...args), delay)
-		},
-		[callback, delay],
-	)
-}
-
 export default () => {
 	const draft = useSelector(state => state.draft)
 	const dispatch = useDispatch()
@@ -40,7 +29,7 @@ export default () => {
 		},
 		[dispatch],
 	)
-	const debounceSetDraft = useDebounce(cb, 100)
+	const debounceSetDraft = useDebounce(cb)
 
 	return React.useMemo(
 		() => (
