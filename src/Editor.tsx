@@ -1,29 +1,27 @@
-import React from "react"
-import { useDispatch } from "react-redux"
-
-import { setDraft, useSelector } from "~/store"
-import { useScrollBarSource } from "./components/ScrollBar"
-import { useDebounce } from "~/hooks"
-
-import { fromTextArea, on, off } from "codemirror"
-import type { Editor, EditorConfiguration, EditorFromTextArea, Doc, EditorChange } from "codemirror"
+import type { Doc, Editor, EditorChange, EditorConfiguration, EditorFromTextArea } from "codemirror"
+import { fromTextArea, off, on } from "codemirror"
 import "codemirror/addon/comment/comment"
-import "codemirror/addon/edit/closetag"
 import "codemirror/addon/edit/closebrackets"
+import "codemirror/addon/edit/closetag"
 import "codemirror/addon/edit/continuelist"
-
-// highlights
-import "codemirror/mode/markdown/markdown"
+import "codemirror/mode/css/css"
+import "codemirror/mode/go/go"
 import "codemirror/mode/javascript/javascript"
 import "codemirror/mode/jsx/jsx"
-import "codemirror/mode/go/go"
+// highlights
+import "codemirror/mode/markdown/markdown"
 import "codemirror/mode/sass/sass"
-import "codemirror/mode/css/css"
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from "react"
+import { useDispatch } from "react-redux"
+import "twin.macro"
+import { useDebounce } from "~/hooks"
+import { setDraft, useSelector } from "~/store"
+import { useScrollBarSource } from "./components/ScrollBar"
 
-export default () => {
+export default function Editor() {
 	const draft = useSelector(state => state.draft)
 	const dispatch = useDispatch()
-	const cb = React.useCallback(
+	const cb = useCallback(
 		(value: string) => {
 			dispatch(setDraft(value))
 		},
@@ -31,10 +29,10 @@ export default () => {
 	)
 	const debounceSetDraft = useDebounce(cb)
 
-	return React.useMemo(
+	return useMemo(
 		() => (
 			<CodeMirror
-				className="sticky top-0 self-start"
+				tw="sticky top-0 self-start"
 				options={{
 					lineNumbers: true,
 					mode: "markdown",
@@ -58,7 +56,6 @@ export default () => {
 				onChange={e => debounceSetDraft(e)}
 			/>
 		),
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[debounceSetDraft],
 	)
 }
@@ -71,71 +68,69 @@ interface MyProps {
 type Textarea = Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "onChange">
 type Props = Textarea & MyProps
 
-const CodeMirror = React.forwardRef<Editor, Props>(
-	({ options, className, style, onChange, defaultValue, ...props }, ref) => {
-		const textareaRef = React.useRef<HTMLTextAreaElement>()
-		const editorRef = React.useRef<EditorFromTextArea>()
-		React.useImperativeHandle<Partial<Editor>, Partial<Editor>>(ref, () => ({
-			focus: () => editorRef.current.focus(),
-		}))
-		React.useEffect(() => {
-			editorRef.current = fromTextArea(textareaRef.current, options)
-			const cm = editorRef.current
-			cm.setValue(defaultValue as string)
-			window.setTimeout(() => {
-				cm.refresh()
-			}, 500)
+const CodeMirror = forwardRef<Editor, Props>(({ options, className, style, onChange, defaultValue, ...props }, ref) => {
+	const textareaRef = useRef<HTMLTextAreaElement>()
+	const editorRef = useRef<EditorFromTextArea>()
+	useImperativeHandle<Partial<Editor>, Partial<Editor>>(ref, () => ({
+		focus: () => editorRef.current.focus(),
+	}))
+	useEffect(() => {
+		editorRef.current = fromTextArea(textareaRef.current, options)
+		const cm = editorRef.current
+		cm.setValue(defaultValue as string)
+		window.setTimeout(() => {
+			cm.refresh()
+		}, 500)
 
-			return () => {
-				cm.toTextArea()
-			}
-		}, [options, defaultValue])
+		return () => {
+			cm.toTextArea()
+		}
+	}, [options, defaultValue])
 
-		React.useEffect(() => {
-			const cm = editorRef.current
-			const handler = (instance: Doc, changeArgs: EditorChange) => {
-				onChange(cm.getValue())
-			}
+	useEffect(() => {
+		const cm = editorRef.current
+		const handler = (instance: Doc, changeArgs: EditorChange) => {
+			onChange(cm.getValue())
+		}
+		if (onChange) {
+			on(cm.getDoc(), "change", handler)
+		}
+		return () => {
 			if (onChange) {
-				on(cm.getDoc(), "change", handler)
+				off(cm.getDoc(), "change", handler)
 			}
-			return () => {
-				if (onChange) {
-					off(cm.getDoc(), "change", handler)
-				}
-			}
-		}, [onChange])
+		}
+	}, [onChange])
 
-		// handle scroll
-		const scrollbar = useScrollBarSource()
-		const animationFrame = React.useRef(0)
-		React.useEffect(() => {
-			const cm = editorRef.current
-			const handler = () => {
-				cancelAnimationFrame(animationFrame.current)
-				animationFrame.current = requestAnimationFrame(() => {
-					const { top, height, clientHeight } = cm.getScrollInfo()
-					const percentage = top / (height - clientHeight)
-					const cTop = percentage * (scrollbar.scrollHeight - scrollbar.clientHeight)
-					scrollbar.scrollTop = cTop
-				})
-			}
-			on(cm, "scroll", handler)
-			return () => {
-				off(cm, "scroll", handler)
-			}
-		}, [scrollbar])
+	// handle scroll
+	const scrollbar = useScrollBarSource()
+	const animationFrame = useRef(0)
+	useEffect(() => {
+		const cm = editorRef.current
+		const handler = () => {
+			cancelAnimationFrame(animationFrame.current)
+			animationFrame.current = requestAnimationFrame(() => {
+				const { top, height, clientHeight } = cm.getScrollInfo()
+				const percentage = top / (height - clientHeight)
+				const cTop = percentage * (scrollbar.scrollHeight - scrollbar.clientHeight)
+				scrollbar.scrollTop = cTop
+			})
+		}
+		on(cm, "scroll", handler)
+		return () => {
+			off(cm, "scroll", handler)
+		}
+	}, [scrollbar])
 
-		return (
-			<div className={className} style={style}>
-				<textarea
-					ref={textareaRef}
-					{...props}
-					onChange={e => {
-						// no code
-					}}
-				/>
-			</div>
-		)
-	},
-)
+	return (
+		<div className={className} style={style}>
+			<textarea
+				ref={textareaRef}
+				{...props}
+				onChange={e => {
+					// no code
+				}}
+			/>
+		</div>
+	)
+})

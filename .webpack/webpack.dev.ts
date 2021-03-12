@@ -1,43 +1,30 @@
-import { HotModuleReplacementPlugin } from "webpack"
-import webpackMerge from "webpack-merge"
-import createBaseConfig from "./webpack.common"
-import type { Configuration } from "webpack"
+import ReactRefreshPlugin from "@pmmmwh/react-refresh-webpack-plugin"
+import ESLintPlugin from "eslint-webpack-plugin"
+import path from "path"
+import { merge } from "webpack-merge"
+import commonConfig from "./webpack.common"
 
-process.env.NODE_ENV = "development"
-process.env.PUBLIC_URL = ""
-
-const config: Configuration = {
+const workspaceFolder = path.resolve(__dirname, "..")
+export default merge(commonConfig, {
 	mode: "development",
 	devtool: "inline-source-map",
-	stats: {
-		children: false,
-		modules: false,
-		entrypoints: false,
-	},
-	performance: {
-		hints: false,
-		assetFilter: filename => {
-			return filename.endsWith(".css") || filename.endsWith(".js")
-		},
-	},
-	resolve: {
-		alias: {
-			"react-dom": "@hot-loader/react-dom",
-		},
-	},
-	plugins: [new HotModuleReplacementPlugin()],
 	devServer: {
 		hot: true,
 		compress: true,
 		open: true,
 		host: "localhost",
 		clientLogLevel: "none",
-		openPage: "draft",
 		contentBase: false,
-		quiet: true,
 		noInfo: true,
 		historyApiFallback: true,
 	},
-}
-
-export default webpackMerge(createBaseConfig(), config)
+	stats: {
+		children: false,
+		modules: false,
+		entrypoints: false,
+	},
+	plugins: [
+		new ReactRefreshPlugin(),
+		new ESLintPlugin({ context: path.join(workspaceFolder, "src"), extensions: ["js", "jsx", "ts", "tsx"] }),
+	],
+})

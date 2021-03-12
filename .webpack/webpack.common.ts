@@ -1,47 +1,151 @@
-import path from "path"
-import { EnvironmentPlugin, ExtendedAPIPlugin, NormalModuleReplacementPlugin } from "webpack"
-
-// Plugins
+import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin"
+import glob from "glob"
 import HtmlWebpackPlugin from "html-webpack-plugin"
 import MiniCssExtractPlugin from "mini-css-extract-plugin"
-import WebpackBarPlugin from "webpackbar"
-import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin"
-import TsPathsResolvePlugin from "./plugins/TsPathsResolvePlugin"
-import MonacoWebpackPlugin from "monaco-editor-webpack-plugin"
 import MonacoLocalesPlugin from "monaco-editor-locales-plugin"
-import type { Configuration, Plugin, Loader } from "webpack"
+import MonacoWebpackPlugin from "monaco-editor-webpack-plugin"
+import path from "path"
+import TsPathsResolvePlugin from "ts-paths-resolve-plugin"
+import type { Configuration } from "webpack"
+import { EnvironmentPlugin } from "webpack"
+import WebpackBar from "webpackbar"
 
-// NOTE: 關閉 webpack 要求 donate 訊息
-process.env.DISABLE_OPENCOLLECTIVE = "true"
+const workspaceFolder = path.resolve(__dirname, "..")
+const isDev = process.env.NODE_ENV !== "production"
+const outputCSS = "css"
+const outputJS = "js"
+const publicPath = "/"
 
-export default function (options?: { src?: string; dist?: string }): Configuration {
-	const workingDirectory = process.cwd()
-	const src = (options && options.src) || path.resolve(workingDirectory, "src")
-	const dist = (options && options.dist) || path.resolve(workingDirectory, "build")
-	const assets = path.resolve(workingDirectory, "public", "assets")
-	const isDevelopment = process.env.NODE_ENV === "development"
+const join = (...args: string[]) => path.join(...args).replace(path.sep, "/")
 
-	const plugins: Plugin[] = [
-		new WebpackBarPlugin({ color: "blue", name: "React" }),
+const entry: Configuration["entry"] = glob
+	.sync("index.*", { cwd: path.resolve(workspaceFolder, "src") })
+	.map(i => path.resolve(workspaceFolder, "src", i))
+
+const styleLoader = {
+	loader: isDev ? "style-loader" : MiniCssExtractPlugin.loader,
+	options: {
+		...(!isDev && { publicPath: path.relative(path.join(publicPath, outputCSS), publicPath) }),
+	},
+}
+
+const config: Configuration = {
+	target: "web",
+	entry,
+	output: {
+		path: path.resolve(workspaceFolder, "build"),
+		filename: join(outputJS, "[name].js?[fullhash]"),
+		chunkFilename: join(outputJS, "[name].js?.[fullhash:8]"),
+		publicPath,
+	},
+	resolve: {
+		extensions: [".js", ".jsx", ".ts", ".tsx", ".json"],
+		plugins: [new TsPathsResolvePlugin({ tsConfigPath: path.join(workspaceFolder, "src", "tsconfig.json") })],
+	},
+	module: {
+		rules: [
+			{
+				exclude: /node_modules/,
+				test: /\.md$/,
+				loader: path.resolve(__dirname, "./loaders/markdown-loader.js"),
+			},
+			{
+				test: /\.tsx?$/,
+				exclude: /node_modules|__tests?__|\.test\.tsx?$|\.worker\.ts$/,
+				use: [
+					"babel-loader",
+					{
+						loader: "ts-loader",
+						options: { context: path.join(workspaceFolder, "src"), happyPackMode: true },
+					},
+				],
+			},
+			{
+				test: /\.jsx?$/,
+				exclude: /node_modules|__tests?__|\.test\.jsx?$|\.worker\.js$/,
+				use: ["babel-loader"],
+			},
+			{
+				test: /\.worker\.ts$/,
+				exclude: /node_modules/,
+				use: ["worker-loader", "babel-loader", { loader: "ts-loader", options: { happyPackMode: true } }],
+			},
+			{
+				test: /\.worker\.js$/,
+				exclude: /node_modules/,
+				use: ["worker-loader", "babel-loader"],
+			},
+			{
+				test: /\.css$/,
+				exclude: /node_modules/,
+				use: [
+					styleLoader,
+					{
+						loader: "css-loader",
+						options: {
+							url: true,
+							sourceMap: true,
+						},
+					},
+					"postcss-loader",
+				],
+			},
+			{
+				include: /node_modules/,
+				test: /\.css$/,
+				use: [styleLoader, "css-loader"],
+			},
+			{
+				test: /\.(png|jpe?g|gif|ico)(\?.*)?$/i,
+				use: [
+					{
+						loader: "url-loader",
+						options: {
+							name: join("images", "[name].[ext]?[contenthash]"),
+							limit: 8192,
+						},
+					},
+				],
+			},
+			{
+				test: /\.svg$/,
+				use: ["babel-loader", "@svgr/webpack"],
+			},
+			{
+				test: /\.ya?ml$/,
+				use: "js-yaml-loader",
+			},
+			{
+				test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/i,
+				use: [
+					{
+						loader: "file-loader",
+						options: {
+							name: join("fonts", "[name].[ext]?[contenthash]"),
+						},
+					},
+				],
+			},
+		],
+	},
+	plugins: [
 		new EnvironmentPlugin({
 			NODE_ENV: "development",
 			PUBLIC_URL: "draft/",
 			TAILWIND_CONFIG: JSON.stringify(require("../tailwind.config.js")),
 		}),
-		new MiniCssExtractPlugin({
-			filename: "css/[name].[contenthash:8].css",
-			chunkFilename: "css/[name].[contenthash:8].css",
-		}),
 		new HtmlWebpackPlugin({
-			inject: false,
-			filename: "index.html",
-			template: path.join(workingDirectory, "public", "index.pug"),
-			favicon: path.join(workingDirectory, "public", "favicon.ico"),
-			minify: false,
+			title: "Draft",
+			inject: true,
+			minify: true,
+			template: path.join(workspaceFolder, "public", "index.ejs"),
+			favicon: path.join(workspaceFolder, "public", "favicon.ico"),
+			isDev,
 		}),
-		new ForkTsCheckerWebpackPlugin({
-			checkSyntacticErrors: true,
-			tsconfig: path.resolve(src, "tsconfig.json"),
+		new ForkTsCheckerPlugin({
+			typescript: {
+				configFile: path.resolve(workspaceFolder, "src", "tsconfig.json"),
+			},
 		}),
 		new MonacoWebpackPlugin({
 			languages: ["typescript", "javascript", "css", "html", "json", "scss", "go", "markdown"],
@@ -52,182 +156,12 @@ export default function (options?: { src?: string; dist?: string }): Configurati
 			defaultLanguage: "zh-tw",
 			logUnmatched: false,
 		}),
-	]
-
-	if (!isDevelopment) {
-		plugins.push(new ExtendedAPIPlugin())
-	}
-
-	const styleLoader: Loader = {
-		loader: isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
-		options: {
-			...(!isDevelopment && {
-				publicPath: "../",
-			}),
-		},
-	}
-
-	const fontLoader: Loader = {
-		loader: "file-loader",
-		options: {
-			name: "[name].[ext]?[hash:8]",
-			outputPath: "assets/fonts",
-		},
-	}
-
-	return {
-		entry: {
-			index: path.resolve(src, "index.tsx"),
-		},
-		output: {
-			path: dist,
-			filename: "js/[name].[hash:8].js",
-			chunkFilename: "js/[name].[hash:8].js",
-			publicPath: "/draft",
-		},
-		target: "web",
-		module: {
-			rules: [
-				{
-					test: /\.pug$/,
-					use: [
-						{
-							loader: "pug-loader",
-							options: {
-								pretty: true,
-							},
-						},
-					],
-				},
-				{
-					test: /\.tsx?$/,
-					exclude: /node_modules|\.test.tsx?$/,
-					use: [
-						{
-							loader: "cache-loader",
-							options: {
-								cacheDirectory: path.resolve(".cache"),
-							},
-						},
-						{ loader: "thread-loader" },
-						{ loader: "babel-loader" },
-						{ loader: "ts-loader", options: { happyPackMode: true } },
-					],
-				},
-				{
-					test: /\.jsx?$/,
-					exclude: /node_modules/,
-					use: [{ loader: "babel-loader" }],
-				},
-				{
-					test: /\.(png|jpe?g|gif|svg|ico)$/i,
-					use: {
-						loader: "url-loader",
-						options: {
-							name: "assets/images/[name].[ext]",
-							limit: 8192,
-						},
-					},
-				},
-				{
-					test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/i,
-					use: fontLoader,
-				},
-				// For user space:
-				{
-					exclude: /node_modules/,
-					test: /\.css$/,
-					use: [
-						styleLoader,
-						{
-							loader: "css-loader",
-							options: {
-								url: true,
-								sourceMap: true,
-							},
-						},
-						"postcss-loader",
-					],
-				},
-				// {
-				//     exclude: /node_modules/,
-				//     test: /\.less$/,
-				//     use: [
-				//         styleLoader,
-				//         {
-				//             loader: "css-loader",
-				//             options: {
-				//                 url: true,
-				//                 modules: true,
-				//                 importLoaders: 2,
-				//             },
-				//         },
-				//         "postcss-loader",
-				//         "less-loader",
-				//     ],
-				// },
-				{
-					exclude: /node_modules/,
-					test: /\.s(a|c)ss$/,
-					use: [
-						styleLoader,
-						{
-							loader: "css-loader",
-							options: {
-								url: true,
-								sourceMap: true,
-							},
-						},
-						"postcss-loader",
-						{
-							loader: "sass-loader",
-							options: {
-								sourceMap: true,
-							},
-						},
-					],
-				},
-				{
-					exclude: /node_modules/,
-					test: /\.md$/,
-					use: ["markdown-loader"],
-				},
-				// For node_modules:
-				{
-					include: /node_modules/,
-					test: /.css$/,
-					use: [styleLoader, "css-loader", "postcss-loader"],
-				},
-				// {
-				//     include: /node_modules/,
-				//     test: /\.less$/,
-				//     use: [styleLoader, "css-loader", "postcss-loader", "less-loader"],
-				// },
-				{
-					include: /node_modules/,
-					test: /\.s(a|c)ss$/,
-					use: [styleLoader, "css-loader", "postcss-loader", "sass-loader"],
-				},
-			],
-		},
-		// NOTE: https://webpack.js.org/configuration/resolve/
-		resolve: {
-			extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
-			modules: [
-				path.resolve(workingDirectory, "node_modules"),
-				path.resolve(workingDirectory, "node_modules/monaco-markdown/node_modules"),
-				path.resolve(workingDirectory, "node_modules/markdown-it/node_modules"),
-			],
-			alias: {
-				assets: path.join(assets),
-			},
-			plugins: [new TsPathsResolvePlugin({ configFile: path.resolve(src, "tsconfig.json") })],
-		},
-		resolveLoader: {
-			alias: {
-				"markdown-loader": path.resolve(__dirname, "./loaders/markdown-loader.ts"),
-			},
-		},
-		plugins,
-	}
+		new MiniCssExtractPlugin({
+			filename: join(outputCSS, "[name].css?[fullhash]"),
+			chunkFilename: join(outputCSS, "[name].chunk.css?[fullhash:8]"),
+		}),
+		new WebpackBar({ color: "blue", name: "React" }),
+	],
 }
+
+export default config

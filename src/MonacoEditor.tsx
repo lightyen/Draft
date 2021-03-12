@@ -1,17 +1,17 @@
-import React from "react"
+import * as monaco from "monaco-editor/esm/vs/editor/editor.api"
+import { MonacoMarkdownExtension } from "monaco-markdown"
+import { useCallback, useEffect, useMemo, useRef } from "react"
 import { useDispatch } from "react-redux"
-import { setDraft, useSelector, instance } from "~/store"
+import "twin.macro"
+import { useDebounce } from "~/hooks"
+import { instance, setDraft, useSelector } from "~/store"
 import { useScrollBarSource } from "./components/ScrollBar"
 
-import { MonacoMarkdownExtension } from "monaco-markdown"
-import * as monaco from "monaco-editor/esm/vs/editor/editor.api"
-import { useDebounce } from "~/hooks"
-
-export default () => {
+export default function MainEditor() {
 	const draft = useSelector(state => state.draft)
-	const defaultDraft = React.useRef(draft)
+	const defaultDraft = useRef(draft)
 	const dispatch = useDispatch()
-	const cb = React.useCallback(
+	const cb = useCallback(
 		(value: string) => {
 			dispatch(setDraft(value))
 		},
@@ -19,7 +19,7 @@ export default () => {
 	)
 	const debounceSetDraft = useDebounce(cb)
 
-	return React.useMemo(() => <Wrapper defaultValue={defaultDraft.current} onChange={e => debounceSetDraft(e)} />, [
+	return useMemo(() => <Wrapper defaultValue={defaultDraft.current} onChange={e => debounceSetDraft(e)} />, [
 		debounceSetDraft,
 	])
 }
@@ -32,17 +32,17 @@ interface Props {
 const Wrapper: React.FC<Props> = props => {
 	const vw = useSelector(state => state.vw)
 	return (
-		<div className="sticky top-0 relative overflow-hidden" style={{ width: `${vw}vw`, height: "100vh" }}>
+		<div tw="sticky top-0 overflow-hidden" style={{ width: `${vw}vw`, height: "100vh" }}>
 			<MonacoEditor {...props} />
 		</div>
 	)
 }
 
-const MonacoEditor: React.FC<Props> = ({ defaultValue, onChange }) => {
+function MonacoEditor({ defaultValue, onChange }: Props) {
 	const scrollbar = useScrollBarSource()
 	const dispatch = useDispatch()
 
-	React.useEffect(() => {
+	useEffect(() => {
 		const model = monaco.editor.createModel(defaultValue, "markdown")
 		model.updateOptions({
 			tabSize: 4,

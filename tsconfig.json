@@ -1,17 +1,20 @@
 {
-	"compilerOptions": {
-		"strict": true,
-		"allowSyntheticDefaultImports": true,
-		"esModuleInterop": true,
-		"isolatedModules": true,
-		"forceConsistentCasingInFileNames": true,
-		"noImplicitThis": true,
-		"noImplicitReturns": true,
-		"noFallthroughCasesInSwitch": true,
-		"removeComments": true,
-		"resolveJsonModule": true,
-		"skipLibCheck": true,
-		"noImplicitAny": false, // 顯式宣告 any 其實沒什麼用，我們應該盡量不使用 any
-		"sourceMap": true
-	}
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "lib": ["esnext"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "noImplicitAny": false,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "removeComments": true,
+    "experimentalDecorators": false,
+    "sourceMap": true
+  }
 }

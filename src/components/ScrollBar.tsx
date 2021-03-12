@@ -1,5 +1,5 @@
-import React from "react"
-import styled from "styled-components"
+import { createContext, useContext, useEffect, useRef, useState } from "react"
+import { css, styled } from "twin.macro"
 
 interface CustomScrollBarProps {
 	/** Color with scrollbar thumb, ex: #cccccc */
@@ -10,13 +10,12 @@ interface CustomScrollBarProps {
 }
 
 // https://css-tricks.com/custom-scrollbars-in-webkit/
-const CustomScrollBar = styled.div.attrs(props => ({ width: 6, padding: 4, color: "black", ...props }))<
-	CustomScrollBarProps
->`
+
+const customStyle = ({ width = 6, padding = 4, color = "black", ...props }: CustomScrollBarProps) => css`
 	transition: all 0.2s ease;
 	::-webkit-scrollbar {
-		width: ${({ width, padding }) => width + padding * 2}px;
-		height: ${({ width, padding }) => width + padding * 2}px;
+		width: ${width + padding * 2}px;
+		height: ${width + padding * 2}px;
 		background: #333333;
 	}
 
@@ -29,34 +28,43 @@ const CustomScrollBar = styled.div.attrs(props => ({ width: 6, padding: 4, color
 	}
 
 	:hover {
-		color: ${({ color }) => color}80;
+		color: ${color}80;
 	}
 
 	::-webkit-scrollbar-thumb {
 		transition: all 3s ease;
 		width: 2px;
-		border: ${({ padding }) => padding}px solid transparent;
-		border-radius: ${({ width, padding }) => width / 2 + padding}px;
+		border: ${padding}px solid transparent;
+		border-radius: ${width / 2 + padding}px;
 		box-shadow: inset 0 0 0 100px;
 	}
 
 	::-webkit-scrollbar-thumb:hover {
-		border: ${({ padding }) => padding - 2}px solid transparent;
+		border: ${padding - 2}px solid transparent;
 		box-shadow: inset 0 0 0 100px;
 	}
 `
-const ScrollBarContext = React.createContext<HTMLDivElement>(null)
+
+const CustomScrollBar = styled.div`
+	${customStyle}
+`
+
+// const CustomScrollBar = styled.div(props => ({ width: 6, padding: 4, color: "black", ...props }))<
+// 	CustomScrollBarProps
+// >
+
+const ScrollBarContext = createContext<HTMLDivElement>(null)
 
 export function useScrollBarSource() {
-	return React.useContext(ScrollBarContext)
+	return useContext(ScrollBarContext)
 }
 
 export function useScrollTop() {
 	const scrollbar = useScrollBarSource()
-	const [scrollTop, setScrollTop] = React.useState(scrollbar.scrollTop)
-	const animationFrame = React.useRef(0)
+	const [scrollTop, setScrollTop] = useState(scrollbar.scrollTop)
+	const animationFrame = useRef(0)
 
-	React.useEffect(() => {
+	useEffect(() => {
 		function scroll() {
 			cancelAnimationFrame(animationFrame.current)
 			animationFrame.current = requestAnimationFrame(() => setScrollTop(scrollbar.scrollTop))
@@ -78,21 +86,23 @@ const textColor = "#1a202c"
 const showColor = backgroundColor
 const hideColor = textColor
 
-export const ScrollBar: React.FC<ScrollBarProps> = ({ children, ...props }) => {
-	const ref = React.useRef<HTMLDivElement>()
-	const [handle, setHandle] = React.useState<HTMLDivElement>(ref.current)
-	const isMount = React.useRef(false)
+export function ScrollBar({ children, ...props }: React.PropsWithChildren<ScrollBarProps>) {
+	const ref = useRef<HTMLDivElement>()
+	const [handle, setHandle] = useState<HTMLDivElement>(ref.current)
+	const isMount = useRef(false)
 
-	const [thumbColor, setThumbColor] = React.useState(hideColor)
+	const [thumbColor, setThumbColor] = useState(hideColor)
 
-	React.useEffect(() => {
+	useEffect(() => {
 		isMount.current = true
 		setHandle(ref.current)
-		return () => (isMount.current = false)
+		return () => {
+			isMount.current = false
+		}
 	}, [])
 
-	const tick = React.useRef<number>()
-	React.useEffect(() => {
+	const tick = useRef<number>()
+	useEffect(() => {
 		const target = ref.current
 		function cb() {
 			window.requestAnimationFrame(() => {

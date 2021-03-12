@@ -9,7 +9,7 @@ thead {
 
 tr > td,
 tr > th {
-	@apply trans text-gray-900 bg-white whitespace-no-wrap box-border;
+	@apply trans text-gray-900 bg-white whitespace-nowrap box-border;
 }
 
 td {

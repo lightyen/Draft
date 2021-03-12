@@ -1,16 +1,15 @@
 {
-	"recommendations": [
-		"naumovs.color-highlight",
-		"msjsdiag.debugger-for-chrome",
-		"firefox-devtools.vscode-firefox-debug",
-		"dbaeumer.vscode-eslint",
-		"christian-kohler.npm-intellisense",
-		"esbenp.prettier-vscode",
-		"editorconfig.editorconfig",
-		"stylelint.vscode-stylelint",
-		"bradlc.vscode-tailwindcss",
-		"jpoissonnier.vscode-styled-components",
-		"visualstudioexptteam.vscodeintellicode",
-		"pkief.material-icon-theme"
-	]
+  "recommendations": [
+    "naumovs.color-highlight",
+    "dbaeumer.vscode-eslint",
+    "christian-kohler.npm-intellisense",
+    "esbenp.prettier-vscode",
+    "editorconfig.editorconfig",
+    "stylelint.vscode-stylelint",
+    "jpoissonnier.vscode-styled-components",
+    "visualstudioexptteam.vscodeintellicode",
+    "lokalise.i18n-ally",
+    "lightyen.tailwindcss-intellisense-twin",
+    "pkief.material-icon-theme"
+  ]
 }

@@ -1,5 +1,6 @@
-import { createAction, createReducer, configureStore } from "@reduxjs/toolkit"
-import { useSelector as useReactReduxSelector, TypedUseSelectorHook } from "react-redux"
+import { configureStore, createAction, createReducer } from "@reduxjs/toolkit"
+import * as monaco from "monaco-editor/esm/vs/editor/editor.api"
+import { TypedUseSelectorHook, useSelector as useReactReduxSelector } from "react-redux"
 import defaultPreloadedState from "./Default.md"
 
 export const setDraft = createAction("SET_DRAFT", (value: string) => {
@@ -13,8 +14,6 @@ export const setVWitdh = createAction("SET_VW", (value: number) => {
 })
 
 export const instance: { monaco?: monaco.editor.IStandaloneCodeEditor } = {}
-
-import * as monaco from "monaco-editor/esm/vs/editor/editor.api"
 
 interface Store {
 	draft: string

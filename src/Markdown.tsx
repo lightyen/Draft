@@ -1,23 +1,22 @@
-import React from "react"
-import { useDispatch } from "react-redux"
-import { useSelector, setVWitdh } from "~/store"
-
 import MarkdownIt from "markdown-it"
-
 // plugins
 import emoji from "markdown-it-emoji"
-import { youtube } from "~/plugins/youtube"
+import { useEffect, useRef } from "react"
+import { useDispatch } from "react-redux"
+import "twin.macro"
 import { prism } from "~/plugins/prism"
+import { youtube } from "~/plugins/youtube"
+import { setVWitdh, useSelector } from "~/store"
 
-const Resizer: React.FC = () => {
+function Resizer() {
 	const dispatch = useDispatch()
-	const active = React.useRef(false)
+	const active = useRef(false)
 
 	function onMouseDown(e: React.MouseEvent) {
 		e.preventDefault()
 		active.current = true
 	}
-	React.useEffect(() => {
+	useEffect(() => {
 		function update(vw: number) {
 			dispatch(setVWitdh(vw))
 		}
@@ -41,11 +40,7 @@ const Resizer: React.FC = () => {
 	}, [dispatch])
 
 	return (
-		<div
-			className="absolute left-0 h-full w-2 bg-gray-700"
-			style={{ cursor: "col-resize" }}
-			onMouseDown={onMouseDown}
-		/>
+		<div tw="absolute left-0 h-full w-2 bg-gray-700" style={{ cursor: "col-resize" }} onMouseDown={onMouseDown} />
 	)
 }
 
@@ -59,11 +54,12 @@ const md = new MarkdownIt({
 	.use(prism)
 	.use(emoji)
 
-const Content: React.FC = () => {
+function Content() {
 	const __html = useSelector(state => md.render(state.draft))
 	return (
 		<div
-			className="post mx-auto mt-6 p-3 bg-white flex-grow"
+			className="post"
+			tw="mx-auto mt-6 p-3 bg-white flex-grow"
 			style={{
 				maxWidth: "85%",
 				minHeight: 600,
@@ -73,10 +69,10 @@ const Content: React.FC = () => {
 	)
 }
 
-export default () => {
+export default function Markdown() {
 	const vw = useSelector(state => 100 - state.vw)
 	return (
-		<div className="flex-grow flex relative" style={{ width: `${vw}vw` }}>
+		<div tw="flex-grow flex relative" style={{ width: `${vw}vw` }}>
 			<Content />
 			<Resizer />
 		</div>

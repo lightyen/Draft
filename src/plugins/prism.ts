@@ -1,22 +1,19 @@
-import type { PluginWithOptions } from "markdown-it"
 import classnames from "classnames"
-
+import type { PluginWithOptions } from "markdown-it"
 import Prism from "prismjs"
-
+import "prismjs/components/prism-css"
+import "prismjs/components/prism-go"
 // highlights
 import "prismjs/components/prism-javascript"
-import "prismjs/components/prism-typescript"
-import "prismjs/components/prism-jsx"
-import "prismjs/components/prism-tsx"
-import "prismjs/components/prism-go"
-import "prismjs/components/prism-css"
-import "prismjs/components/prism-scss"
-import "prismjs/components/prism-sass"
 import "prismjs/components/prism-json"
-
+import "prismjs/components/prism-jsx"
+import "prismjs/components/prism-sass"
+import "prismjs/components/prism-scss"
+import "prismjs/components/prism-tsx"
+import "prismjs/components/prism-typescript"
 import "prismjs/plugins/line-numbers/prism-line-numbers"
-import "prismjs/plugins/toolbar/prism-toolbar"
 import "prismjs/plugins/show-language/prism-show-language"
+import "prismjs/plugins/toolbar/prism-toolbar"
 
 interface PrismjsConfiguration {}
 
@@ -24,7 +21,7 @@ export const prism: PluginWithOptions<Partial<PrismjsConfiguration>> = (md, cfg 
 	const langPrefix = "language-"
 	const installPlugins = Prism.plugins
 	const preClassName = classnames({
-		"line-numbers": installPlugins.hasOwnProperty("lineNumbers"),
+		"line-numbers": Object.prototype.hasOwnProperty.call(installPlugins, "lineNumbers"),
 	})
 	const defaultRender =
 		md.renderer.rules.fence ||
