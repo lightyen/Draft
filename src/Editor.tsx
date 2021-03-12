@@ -80,7 +80,7 @@ const CodeMirror = forwardRef<Editor, Props>(({ options, className, style, onCha
 		cm.setValue(defaultValue as string)
 		window.setTimeout(() => {
 			cm.refresh()
-		}, 500)
+		}, 150)
 
 		return () => {
 			cm.toTextArea()

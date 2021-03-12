@@ -87,6 +87,6 @@ func main() {
 
 ## youtube
 
-[Lemon](yt:uRB1G0cKpIk)
+[pekomiko](yt:uRB1G0cKpIk)
 
 https://developers.google.com/youtube/player_parameters

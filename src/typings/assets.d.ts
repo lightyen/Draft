@@ -2,6 +2,7 @@ declare module "*.css"
 declare module "*.less"
 declare module "*.scss"
 declare module "*.json"
+declare module "*.woff2"
 declare module "*.png" {
 	const path: string
 	export = path

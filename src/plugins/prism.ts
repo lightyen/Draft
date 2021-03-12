@@ -12,8 +12,8 @@ import "prismjs/components/prism-scss"
 import "prismjs/components/prism-tsx"
 import "prismjs/components/prism-typescript"
 import "prismjs/plugins/line-numbers/prism-line-numbers"
-import "prismjs/plugins/show-language/prism-show-language"
 import "prismjs/plugins/toolbar/prism-toolbar"
+import "prismjs/plugins/show-language/prism-show-language"
 
 interface PrismjsConfiguration {}
 
