@@ -5,7 +5,7 @@ export default css`
 		position: absolute;
 		top: 0.3rem;
 		right: 0.2rem;
-		transition: opacity 0.2s ease;
+		${tw`transition`}
 		opacity: 0;
 		user-select: none;
 	}
@@ -37,11 +37,9 @@ export default css`
 	div.code-toolbar > .toolbar a,
 	div.code-toolbar > .toolbar button,
 	div.code-toolbar > .toolbar span {
-		${tw`text-sm px-2`}
-		background: #f5f2f0;
+		${tw`text-sm px-2 transition`}
 		background: rgba(224, 224, 224, 0.2);
 		box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.2);
-		transition: color 0.2s ease;
 	}
 
 	div.code-toolbar > .toolbar a:hover,

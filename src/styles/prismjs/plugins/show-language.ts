@@ -12,7 +12,6 @@ export default css`
 	.token.cr:before,
 	.token.lf:before,
 	.token.space:before {
-		color: #808080;
 		opacity: 0.6;
 		position: absolute;
 	}

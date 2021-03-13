@@ -14,12 +14,12 @@ const style = css`
 
 	pre:not([class*="CodeMirror"]) {
 		padding: 15px;
-		${tw`mb-3 rounded shadow bg-gray-900`}
+		${tw`mb-3 rounded shadow`}
 	}
 
 	code {
-		font-family: Fira Code, 微軟正黑體, Microsoft JhengHei, Roboto, Helvetica Neue, Helvetica, Arial, PingFang TC,
-			黑體-繁, Heiti TC, 蘋果儷中黑, Apple LiGothic Medium, sans-serif !important;
+		font-family: Cascadia Mono, 微軟正黑體, Microsoft JhengHei, Roboto, Helvetica Neue, Helvetica, Arial,
+			PingFang TC, 黑體-繁, Heiti TC, 蘋果儷中黑, Apple LiGothic Medium, sans-serif !important;
 	}
 
 	pre[class*="language-"] {
@@ -37,10 +37,9 @@ const style = css`
 	div.code-toolbar > .toolbar a,
 	div.code-toolbar > .toolbar button,
 	div.code-toolbar > .toolbar span {
-		transition: all 0.2s ease;
 		background: rgba(224, 224, 224, 0.2);
 		box-shadow: 0 0 0 2px rgba(119, 119, 119, 0.5);
-		${tw`text-gray-500 py-0 px-1 text-sm rounded-lg select-none`}
+		${tw`text-gray-400 transition py-0 px-1 text-sm rounded-lg select-none`}
 	}
 
 	div.code-toolbar > .toolbar a:hover,
@@ -50,8 +49,7 @@ const style = css`
 	div.code-toolbar > .toolbar span:hover,
 	div.code-toolbar > .toolbar span:focus {
 		background: rgba(224, 224, 224, 0.2);
-		box-shadow: 0 0 0 2px rgba(168, 168, 168, 0.5);
-		${tw`text-gray-300`}
+		${tw`text-gray-200`}
 	}
 `
 

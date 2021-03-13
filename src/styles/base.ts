@@ -1,4 +1,4 @@
-import FiraCodeFont from "assets/fonts/FiraCode-Regular.woff2"
+import CascadiaCodeMono from "assets/fonts/CascadiaMono.woff2"
 import tw, { css } from "twin.macro"
 
 export default css`
@@ -7,8 +7,8 @@ export default css`
 	}
 
 	@font-face {
-		font-family: Fira Code;
-		src: local("Fira Code"), url(${FiraCodeFont}) format("woff2");
+		font-family: "Cascadia Mono";
+		src: local("Cascadia Mono"), url(${CascadiaCodeMono}) format("woff2");
 	}
 
 	button:-moz-focusring,

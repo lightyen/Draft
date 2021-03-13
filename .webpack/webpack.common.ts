@@ -36,7 +36,7 @@ const config: Configuration = {
 		path: path.resolve(workspaceFolder, "build"),
 		filename: join(outputJS, "[name].js?[fullhash]"),
 		chunkFilename: join(outputJS, "[name].js?.[fullhash:8]"),
-		publicPath,
+		publicPath: "/draft/",
 	},
 	resolve: {
 		extensions: [".js", ".jsx", ".ts", ".tsx", ".json"],

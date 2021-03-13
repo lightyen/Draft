@@ -57,7 +57,7 @@ function MonacoEditor({ defaultValue, onChange }: Props) {
 			theme: "vs-dark",
 			scrollBeyondLastLine: false,
 			fontLigatures: true,
-			fontFamily: "Fira Code",
+			fontFamily: "Cascadia Mono",
 			find: {
 				addExtraSpaceOnTop: false,
 			},

@@ -2,8 +2,8 @@ import tw, { css } from "twin.macro"
 
 export default css`
 	.CodeMirror {
-		font-family: Fira Code, Roboto, Helvetica Neue, Helvetica, Arial, PingFang TC, Apple LiGothic Medium, 微軟正黑體,
-			Microsoft JhengHei, sans-serif;
+		font-family: Cascadia Mono, Roboto, Helvetica Neue, Helvetica, Arial, PingFang TC, Apple LiGothic Medium,
+			微軟正黑體, Microsoft JhengHei, sans-serif;
 		${tw`bg-gray-300 text-gray-900 h-auto`}
 	}
 
@@ -39,9 +39,5 @@ export default css`
 	.CodeMirror {
 		width: 48vw;
 		height: 100vh;
-	}
-
-	.CodeMirror-linenumbers {
-		${tw`bg-gray-900`}
 	}
 `
